@@ -1,8 +1,13 @@
 import React from 'react';
+import ProductsDetails from '../components/Products/ProductsDetails';
 import MainLayout from '../layouts/MainLayout';
 
 const Product = () => {
-    return <MainLayout>product detail</MainLayout>;
+  return (
+    <MainLayout>
+      <ProductsDetails />
+    </MainLayout>
+  );
 };
 
 export default Product;
