@@ -28,6 +28,9 @@ const Content = () => {
 
     useEffect(() => {
         fetchProducts();
+        // if (window.location.search) {
+        //     window.location.search = '';
+        // }
     }, [location.search]);
 
     return (

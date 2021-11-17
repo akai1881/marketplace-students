@@ -13,9 +13,10 @@ import {
     GET_PRODUCT_ERROR,
     GET_PRODUCT_LOADING,
     GET_PRODUCT_SUCCESS,
+    SET_SEARCH_RESULTS,
 } from '../utils/constants';
 import { productError, productLoading, productSuccess } from './actions/productDetailsActions';
-import { productsError, productsLoading, productsSuccess } from './actions/productsActions';
+import { productsError, productsLoading, productsSuccess, setSearchResults } from './actions/productsActions';
 
 const productsContext = createContext();
 
@@ -32,6 +33,7 @@ const initialState = {
     },
     cartData: JSON.parse(localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')).products.length : 0,
     cart: {},
+    searchResults: [],
 };
 
 const reducer = (state, action) => {
@@ -88,6 +90,12 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 cart: action.payload,
+            };
+
+        case SET_SEARCH_RESULTS:
+            return {
+                ...state,
+                searchResults: action.payload,
             };
 
         default:
@@ -197,6 +205,19 @@ const ProductsContext = ({ children }) => {
         navigate(url);
     };
 
+    const fetchSearchProducts = async (value) => {
+        try {
+            if (!value) {
+                dispatch(setSearchResults([]));
+                return;
+            }
+            const { data } = await $api(`?q=${value}`);
+            dispatch(setSearchResults(data));
+        } catch (e) {
+            console.log(e.message);
+        }
+    };
+
     const values = {
         products: state.products,
         loading: state.loading,
@@ -206,11 +227,14 @@ const ProductsContext = ({ children }) => {
         productDetailsError: state.productDetails.error,
         cartData: state.cartData,
         cart: state.cart,
+        searchResults: state.searchResults,
         fetchProducts,
         fetchByParams,
         fetchOneProduct,
         addAndDeleteProductInCart,
         getCart,
+        fetchSearchProducts,
+        dispatch,
         changeProductCount,
     };
 

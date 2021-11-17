@@ -27,7 +27,10 @@ const Sidebar = () => {
 
     const handleSlider = (e, value) => {
         setSlider(value);
-        fetchByParams('price_lte', value);
+    };
+
+    const handleFilterPrice = () => {
+        fetchByParams('price_lte', slider);
     };
 
     return (
@@ -72,6 +75,7 @@ const Sidebar = () => {
                         min={200}
                         max={20000}
                         value={slider}
+                        onChangeCommitted={handleFilterPrice}
                         onChange={handleSlider}
                         valueLabelDisplay="auto"
                         aria-labelledby="range-slider"
