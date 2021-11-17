@@ -4,11 +4,11 @@ import AppRoutes from './routes';
 
 function App() {
     return (
-        <ProductsContext>
-            <BrowserRouter>
+        <BrowserRouter>
+            <ProductsContext>
                 <AppRoutes />
-            </BrowserRouter>
-        </ProductsContext>
+            </ProductsContext>
+        </BrowserRouter>
     );
 }
 

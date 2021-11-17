@@ -1,4 +1,6 @@
+import { LocalConvenienceStoreOutlined } from '@material-ui/icons';
 import React, { createContext, useContext, useReducer } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { $api } from '../service/axios-config';
 import { calcSubPrice, calcTotalPrice } from '../utils/calc';
 import { checkItemInCart } from '../utils/check-item-cart';
@@ -95,14 +97,17 @@ const reducer = (state, action) => {
 
 const ProductsContext = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const fetchProducts = async () => {
         dispatch(productsLoading());
         try {
-            const { data } = await $api();
+            const { data } = await $api(`/${window.location.search}`);
+            console.log(window.location.search);
             setTimeout(() => {
                 dispatch(productsSuccess(data));
-            }, 2000);
+            }, 1000);
         } catch (error) {
             console.log(error.message);
             dispatch(productsError(error.message));
@@ -178,6 +183,20 @@ const ProductsContext = ({ children }) => {
         getCart();
     };
 
+    const fetchByParams = async (query, value) => {
+        const search = new URLSearchParams(location.search);
+        if (value === 'all') {
+            search.delete(query);
+        } else if (Array.isArray(value)) {
+            search.set('price_gte', value[0]);
+            search.set('price_lte', value[1]);
+        } else {
+            search.set(query, value);
+        }
+        const url = `${location.pathname}?${search.toString()}`;
+        navigate(url);
+    };
+
     const values = {
         products: state.products,
         loading: state.loading,
@@ -188,6 +207,7 @@ const ProductsContext = ({ children }) => {
         cartData: state.cartData,
         cart: state.cart,
         fetchProducts,
+        fetchByParams,
         fetchOneProduct,
         addAndDeleteProductInCart,
         getCart,

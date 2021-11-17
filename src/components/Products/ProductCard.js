@@ -34,10 +34,13 @@ const ProductCard = ({ product, cart }) => {
 
     const isItemInCart = () => {
         if (cart) {
+            // console.log(checkItemInCart(cart.products, 0));
             return checkItemInCart(cart.products, product.id);
         }
         return false;
     };
+
+    const inCart = isItemInCart();
 
     return (
         <Card className={classes.root}>
@@ -64,7 +67,7 @@ const ProductCard = ({ product, cart }) => {
                 </CardActionArea>
             </MyLink>
             <CardActions className={classes.actions}>
-                <IconButton color={isItemInCart() ? 'secondary' : 'default'}>
+                <IconButton color={inCart ? 'secondary' : 'default'}>
                     <ShoppingCartIcon />
                 </IconButton>
                 <Button
